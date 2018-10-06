@@ -32,6 +32,8 @@ Here are the things you can configure:
 * `appendText`: adds text to the bottom of the module
 * `transformText`: transforms the module by running the `content` and loader `options`
  through a custom function that returns the new content
+* `exclude`: exclude file names that match the regular expression
+* `include`: include file names that match the regular expression (overrides exclude)
 
 ### Usage
 
@@ -47,6 +49,8 @@ Specify the loader and options in your webpack configuration:
         loader: 'text-transform-loader',
         options: {
           prependText: '@import \'your/stuff\';\n\n',
+          exclude: /node_modules/,
+          include: /node_modules\/includthis/
         }
       }
     ]

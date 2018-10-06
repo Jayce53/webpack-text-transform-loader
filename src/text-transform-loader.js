@@ -1,42 +1,60 @@
-const loaderUtils = require('loader-utils');
+'use strict';
+
+var _extends = Object.assign || function (target) {
+    for (var i = 1; i < arguments.length; i++) {
+        var source = arguments[i];
+        for (var key in source) {
+            if (Object.prototype.hasOwnProperty.call(source, key)) {
+                target[key] = source[key];
+            }
+        }
+    }
+    return target;
+};
+
+var loaderUtils = require('loader-utils');
 
 function textTransformLoader(srcContent) {
-  const loaderOptions = loaderUtils.getOptions(this);
+    var loaderOptions = loaderUtils.getOptions(this);
 
-  let { textTransformLoader: compilerOptions = {} } = this.options || {};
-  if (typeof compilerOptions === 'function') {
-    compilerOptions = compilerOptions.call(this, this);
-  }
+    var _ref = this.options || {},
+        _ref$textTransformLoa = _ref.textTransformLoader,
+        compilerOptions = _ref$textTransformLoa === undefined ? {} : _ref$textTransformLoa;
 
-  const { pack = 'default' } = loaderOptions;
+    if (typeof compilerOptions === 'function') {
+        compilerOptions = compilerOptions.call(this, this);
+    }
 
-  const options = {
-    ...(pack in compilerOptions ? compilerOptions[pack] : compilerOptions),
-    ...loaderOptions,
-  };
+    var _loaderOptions$pack = loaderOptions.pack,
+        pack = _loaderOptions$pack === undefined ? 'default' : _loaderOptions$pack;
 
-  if (typeof this.cacheable === 'function') {
-    this.cacheable(!compilerOptions.noCache);
-  }
 
-  const {
-    prependText,
-    appendText,
-    transformText,
-  } = options;
+    var options = _extends({}, pack in compilerOptions ? compilerOptions[pack] : compilerOptions, loaderOptions);
 
-  let content = srcContent;
-  if (typeof transformText === 'function') {
-    content = transformText(content, loaderOptions);
-  }
-  if (prependText) {
-    content = prependText + content;
-  }
-  if (appendText) {
-    content += appendText;
-  }
+    if (typeof this.cacheable === 'function') {
+        this.cacheable(!compilerOptions.noCache);
+    }
 
-  return content;
+    var content = srcContent;
+
+    const exclude = options.exclude && options.exclude.test(this.resourcePath);
+    const include = !options.include || options.include.test(this.resourcePath);
+    if (include && !exclude) {
+        var prependText = options.prependText,
+            appendText = options.appendText,
+            transformText = options.transformText;
+
+        if (typeof transformText === 'function') {
+            content = transformText(content, loaderOptions);
+        }
+        if (prependText) {
+            content = prependText + content;
+        }
+        if (appendText) {
+            content += appendText;
+        }
+    }
+    return content;
 }
 
 module.exports = textTransformLoader;
