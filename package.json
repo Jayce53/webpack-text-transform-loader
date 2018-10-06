@@ -1,8 +1,8 @@
 {
   "name": "text-transform-loader",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Webpack loader to prepend, append, or otherwise modify the text content of a module",
-  "main": "lib/text-transform-loader.js",
+  "main": "src/text-transform-loader.js",
   "scripts": {
     "lint": "./node_modules/.bin/eslint .",
     "babel": "rm -rf lib && ./node_modules/.bin/babel src -d lib",
